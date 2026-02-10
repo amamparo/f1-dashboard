@@ -1,0 +1,20 @@
+services:
+  api:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      - PORT=9000
+    volumes:
+      - ./esm_fullstack_challenge:/python-package/esm_fullstack_challenge
+    command: api
+  dashboard:
+    build: ./dashboard
+    ports:
+      - "5173:5173"
+    environment:
+      - PORT=9000
+      - VITE_REACT_APP_API_URL=http://localhost:9000
+    volumes:
+      - ./dashboard/src:/app/src
+    command: start

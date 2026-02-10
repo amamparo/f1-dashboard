@@ -1,0 +1,28 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "esm_fullstack_challenge"
+repository = "https://github.com/blocksixanalytics/esm_fullstack_challenge"
+version = "0.1.0"
+description = "Challenge for ESM FullStack candidates"
+authors = ["Excel Sports <esm@email.com>"]
+license = "Proprietary"
+readme = "README.md"
+keywords = ["esm_fullstack_challenge"]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = {extras = ["standard"], version = "^0.116.0"}
+pandas = "^2.3.1"
+kagglehub = "^0.3.12"
+
+[tool.poetry.group.dev.dependencies]
+bump2version = "^1.0.1"
+flake8 = "^6.0.0"
+pip = "^23.0.1"
+pytest = "^7.2.2"
+tox = "^4.4.7"
+wheel = "^0.40.0"
+coverage = {extras = ["toml"], version = "^7.2.2"}

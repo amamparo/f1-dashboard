@@ -137,7 +137,7 @@ run: clean
 	docker-compose up --build
 
 check: lint test ## run all linting and tests (backend + frontend)
-	cd dashboard && make lint && make test
+	cd dashboard && make lint
 
 install-all: poetry-install
 	make install

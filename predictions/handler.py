@@ -9,6 +9,7 @@ from api_client import ApiClient, HttpApiClient
 from config import ModelConfig, PipelineConfig
 from model import RacePredictor
 
+logging.basicConfig(level=logging.INFO, format='%(levelname)s %(message)s')
 logger = logging.getLogger(__name__)
 
 
@@ -114,7 +115,6 @@ def handler(event, context=None):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s %(message)s')
     arg = int(sys.argv[1]) if len(sys.argv) > 1 else None
     if arg and arg >= 1950:
         event = {'season': arg}

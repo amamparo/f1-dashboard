@@ -32,6 +32,9 @@ jobs:
 
       - name: Deploy infrastructure
         run: make deploy
+        env:
+          ACTIONS_CACHE_URL: ${{ env.ACTIONS_CACHE_URL }}
+          ACTIONS_RUNTIME_TOKEN: ${{ env.ACTIONS_RUNTIME_TOKEN }}
 
       - name: Build and deploy frontend
         run: make deploy-ui

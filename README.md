@@ -1,3 +1,5 @@
+> **Note:** This README is preserved from the original challenge repo. For details on my submission, see [SUBMISSION.md](SUBMISSION.md).
+
 # ESM FullStack Challenge
 Challenge for ESM FullStack candidates
 

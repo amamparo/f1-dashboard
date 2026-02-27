@@ -1,0 +1,64 @@
+{
+  "hosted-zone:account=388646735826:domainName=aaronmamparo.com:region=us-east-1": {
+    "Id": "/hostedzone/Z07417561DBCWXAR1GZIC",
+    "Name": "aaronmamparo.com."
+  },
+  "vpc-provider:account=388646735826:filter.isDefault=true:region=us-east-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0b094106a2c6db68d",
+    "vpcCidrBlock": "172.31.0.0/16",
+    "ownerAccountId": "388646735826",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0d3d2aeb9ff989da4",
+            "cidr": "172.31.0.0/20",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-02b5b693fd331bd08"
+          },
+          {
+            "subnetId": "subnet-085e78d2ffc44e24b",
+            "cidr": "172.31.80.0/20",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-02b5b693fd331bd08"
+          },
+          {
+            "subnetId": "subnet-035cd96da9eeb5329",
+            "cidr": "172.31.16.0/20",
+            "availabilityZone": "us-east-1c",
+            "routeTableId": "rtb-02b5b693fd331bd08"
+          },
+          {
+            "subnetId": "subnet-0c0c9697f6ae19d23",
+            "cidr": "172.31.32.0/20",
+            "availabilityZone": "us-east-1d",
+            "routeTableId": "rtb-02b5b693fd331bd08"
+          },
+          {
+            "subnetId": "subnet-05a564d11bac19674",
+            "cidr": "172.31.48.0/20",
+            "availabilityZone": "us-east-1e",
+            "routeTableId": "rtb-02b5b693fd331bd08"
+          },
+          {
+            "subnetId": "subnet-05100caeef72156e4",
+            "cidr": "172.31.64.0/20",
+            "availabilityZone": "us-east-1f",
+            "routeTableId": "rtb-02b5b693fd331bd08"
+          }
+        ]
+      }
+    ]
+  },
+  "availability-zones:account=388646735826:region=us-east-1": [
+    "us-east-1a",
+    "us-east-1b",
+    "us-east-1c",
+    "us-east-1d",
+    "us-east-1e",
+    "us-east-1f"
+  ]
+}

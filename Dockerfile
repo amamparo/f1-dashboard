@@ -6,6 +6,8 @@ ENV TERM=linux
 ENV PYTHONIOENCODING=utf-8
 ENV PATH="/root/.local/bin:${PATH}"
 
+RUN pip install poetry
+
 RUN mkdir /python-package
 WORKDIR /python-package
 

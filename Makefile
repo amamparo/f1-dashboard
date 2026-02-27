@@ -5,6 +5,7 @@
 .PHONY: lint test test-all check install-all
 .PHONY: build publish install
 .PHONY: docker-build docker-rm docker-run
+.PHONY: deploy deploy-ui
 .SILENT: publish docker-run
 .DEFAULT_GOAL := help
 
@@ -128,6 +129,9 @@ init-db:
 api:
 	./scripts/entrypoint.sh
 
+api-prod:
+	fastapi run esm_fullstack_challenge/main.py --host 0.0.0.0 --port $${PORT:-9000}
+
 ui:
 	cd dashboard && make start
 
@@ -138,6 +142,22 @@ run: clean
 
 check: lint test ## run all linting and tests (backend + frontend)
 	cd dashboard && make lint
+
+deploy: infra/.venv ## deploy infrastructure to AWS via CDK
+	cd infra && npx aws-cdk@latest deploy --require-approval never
+
+deploy-ui: ## build frontend and deploy to S3, invalidate CloudFront
+	$(eval STACK_OUTPUT = $(shell aws cloudformation describe-stacks --stack-name F1DashboardStack --query 'Stacks[0].Outputs' --output json))
+	$(eval BUCKET = $(shell echo '$(STACK_OUTPUT)' | python3 -c "import sys,json;o={x['OutputKey']:x['OutputValue'] for x in json.load(sys.stdin)};print(o['SiteBucketName'])"))
+	$(eval DIST_ID = $(shell echo '$(STACK_OUTPUT)' | python3 -c "import sys,json;o={x['OutputKey']:x['OutputValue'] for x in json.load(sys.stdin)};print(o['DistributionId'])"))
+	$(eval API_URL = $(shell echo '$(STACK_OUTPUT)' | python3 -c "import sys,json;o={x['OutputKey']:x['OutputValue'] for x in json.load(sys.stdin)};print(o['ApiUrl'])"))
+	cd dashboard && yarn install && VITE_REACT_APP_API_URL=$(API_URL) yarn build
+	aws s3 sync dashboard/dist/ s3://$(BUCKET) --delete
+	aws cloudfront create-invalidation --distribution-id $(DIST_ID) --paths "/*"
+
+infra/.venv: infra/requirements.txt
+	python3 -m venv --clear infra/.venv
+	infra/.venv/bin/pip install -q -r infra/requirements.txt
 
 install-all: poetry-install
 	make install

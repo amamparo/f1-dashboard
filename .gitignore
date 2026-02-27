@@ -108,6 +108,9 @@ ENV/
 poetry.lock
 
 
+# CDK
+infra/cdk.out/
+
 # js
 **/node_modules
 **/npm-debug.log

@@ -5,6 +5,7 @@
 .PHONY: lint test test-all check install-all
 .PHONY: build publish install
 .PHONY: docker-build docker-rm docker-run
+.PHONY: deploy
 .SILENT: publish docker-run
 .DEFAULT_GOAL := help
 
@@ -138,6 +139,13 @@ run: clean
 
 check: lint test ## run all linting and tests (backend + frontend)
 	cd dashboard && make lint
+
+deploy: infra/.venv ## deploy infrastructure to AWS via CDK
+	cd infra && npx aws-cdk@latest deploy
+
+infra/.venv: infra/requirements.txt
+	python3 -m venv --clear infra/.venv
+	infra/.venv/bin/pip install -q -r infra/requirements.txt
 
 install-all: poetry-install
 	make install

@@ -37,9 +37,10 @@ const TopDriversByWins = () => {
   };
   const [data, setData] = useState(null);
   useEffect(() => {
-    httpClient(url, options).then(({ headers, json }) => {
+    httpClient(url, options).then(({ json }) => {
       setData(json);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const listContext = useList({ data });
   if (data) {

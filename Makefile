@@ -2,7 +2,7 @@
 .PHONY: clean clean-build clean-pyc clean-test clean-dev
 .PHONY: poetry-init poetry-requirements-txt poetry-requirements-dev-txt
 .PHONY: version-bump-major version-bump-minor version-bump-patch
-.PHONY: lint test test-all
+.PHONY: lint test test-all check install-all
 .PHONY: build publish install
 .PHONY: docker-build docker-rm docker-run
 .SILENT: publish docker-run
@@ -135,3 +135,10 @@ dev:
 	@echo 'COMMAND FOR LOCAL DEV'
 run: clean
 	docker-compose up --build
+
+check: lint test ## run all linting and tests (backend + frontend)
+	cd dashboard && make lint && make test
+
+install-all: poetry-install
+	make install
+	cd dashboard && npm i

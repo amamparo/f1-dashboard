@@ -26,18 +26,36 @@ def autogen_models(db: str = 'data.db') -> Dict[str, BaseModel]:
     tables = get_all_table_names(conn)
     models = {}
 
-    type_map = {
+    pandas_type_map = {
         'int64': int,
         'float64': float,
         'object': str,
     }
 
+    sqlite_type_map = {
+        'INTEGER': int,
+        'REAL': float,
+        'TEXT': str,
+        'BLOB': str,
+    }
+
     for table in tables:
         df = pd.read_sql_query(f"SELECT * FROM {table}", conn)
-        types = {
-            k: (type_map[str(v)], Field())
-            for k, v in df.dtypes.to_dict().items()
-        }
+        if len(df) > 0:
+            types = {
+                k: (pandas_type_map[str(v)], Field())
+                for k, v in df.dtypes.to_dict().items()
+            }
+        else:
+            cursor = conn.cursor()
+            cursor.execute(f"PRAGMA table_info({table})")
+            columns = cursor.fetchall()
+            types = {}
+            for col in columns:
+                col_name = col[1]
+                col_type = col[2].upper().split('(')[0].strip()
+                py_type = sqlite_type_map.get(col_type, str)
+                types[col_name] = (py_type, Field())
         table_model = create_model(
             f'{"".join(table.replace("_", " ").title().split())}Model',
             **types,

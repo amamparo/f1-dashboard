@@ -109,7 +109,7 @@ poetry.lock
 
 
 # CDK
-cdk.out/
+infra/cdk.out/
 
 # js
 **/node_modules

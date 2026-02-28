@@ -4,7 +4,7 @@
 
 > The Web App does not display data in a meaningful way. Please add a dashboard that provides easy to digest insights. There should be at least 2 or more visualizations. You can find related code in `dashboard/src/pages/dashboard.tsx` and `esm_fullstack_challenge/routers/dashboard.py`.
 
-PR: https://github.com/amamparo/f1-dashboard/pulls
+PR: https://github.com/amamparo/f1-dashboard/pull/3
 
 Visualizations Added:
 - Championship Points Progression
@@ -18,8 +18,9 @@ Visualizations Added:
 
 
 # Other General Improvements
-- deployed to AWS: https://github.com/amamparo/f1-dashboard/pull/2
+- deployed to AWS: (PR: https://github.com/amamparo/f1-dashboard/pull/2)
   - see it running at: https://f1-dashboard.aaronmamparo.com
   - [aws-cdk](https://aws.amazon.com/cdk/) for IaC
+  - Deploy locally via `make run` or in github actions via [deploy action](https://github.com/amamparo/f1-dashboard/blob/master/.github/workflows/deploy.yml)
   - API runs as an ECS Fargate service backed by an EFS volume (mounted sqlite db in EFS so that data persists through restarts)
-  - UI is a static website in S3 behind a Cloudfront distrubtion
+  - UI is a static website in S3 behind a Cloudfront distribution

@@ -1,5 +1,6 @@
 from aws_cdk import (
     CfnOutput,
+    DockerCacheOption,
     Duration,
     RemovalPolicy,
     Stack,
@@ -69,7 +70,6 @@ class F1DashboardStack(Stack):
             cluster=cluster,
             service_name="f1-dashboard",
             desired_count=1,
-            circuit_breaker=ecs.DeploymentCircuitBreaker(rollback=True),
             runtime_platform=ecs.RuntimePlatform(
                 cpu_architecture=ecs.CpuArchitecture.ARM64,
                 operating_system_family=ecs.OperatingSystemFamily.LINUX,
@@ -81,14 +81,14 @@ class F1DashboardStack(Stack):
                     "..",
                     exclude=["infra/cdk.out"],
                     platform=ecr_assets.Platform.LINUX_ARM64,
-                    cache_from=[{"type": "gha"}],
-                    cache_to={"type": "gha", "params": {"mode": "max"}},
+                    cache_from=[DockerCacheOption(type="gha")],
+                    cache_to=DockerCacheOption(type="gha", params={"mode": "max"}),
                 ),
                 container_port=9000,
                 command=["api-prod"],
                 environment={
                     "PORT": "9000",
-                    "DB_FILE": "/python-package/data/data.db",
+                    "DB_FILE": "/data/data.db",
                     "CORS_ORIGINS": f"https://{ui_domain}",
                 },
             ),
@@ -182,8 +182,8 @@ class F1DashboardStack(Stack):
             code=_lambda.DockerImageCode.from_image_asset(
                 "../predictions",
                 platform=ecr_assets.Platform.LINUX_ARM64,
-                cache_from=[{"type": "gha"}],
-                cache_to={"type": "gha", "params": {"mode": "max"}},
+                cache_from=[DockerCacheOption(type="gha")],
+                cache_to=DockerCacheOption(type="gha", params={"mode": "max"}),
             ),
             architecture=_lambda.Architecture.ARM_64,
             memory_size=1024,

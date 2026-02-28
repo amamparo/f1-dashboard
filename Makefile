@@ -133,11 +133,6 @@ predictions: ## run prediction model locally (usage: make predictions or make pr
 	./scripts/run-prediction.sh $(RACE_ID)
 
 api-prod:
-	@if [ -n "$${DB_FILE}" ] && [ ! -f "$${DB_FILE}" ]; then \
-		mkdir -p "$$(dirname $${DB_FILE})"; \
-		cp /python-package/data.db "$${DB_FILE}"; \
-		echo "Seeded $${DB_FILE} from baked-in database"; \
-	fi
 	fastapi run esm_fullstack_challenge/main.py --host 0.0.0.0 --port $${PORT:-9000}
 
 ui:
@@ -164,7 +159,7 @@ deploy-ui: ## build frontend and deploy to S3, invalidate CloudFront
 	aws cloudfront create-invalidation --distribution-id $(DIST_ID) --paths "/*"
 
 infra/.venv: infra/requirements.txt
-	python3.12 -m venv --clear infra/.venv
+	python3 -m venv --clear infra/.venv
 	infra/.venv/bin/pip install -q -r infra/requirements.txt
 
 install-all: poetry-install

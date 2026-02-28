@@ -1,4 +1,4 @@
-This app is deployed and live at: https://f1-dashboard.aaronmamparo.com
+This app is live at: https://f1-dashboard.aaronmamparo.com
 
 ## Completed Challenges
 
@@ -18,8 +18,13 @@ Visualizations Added:
   - Stacked bar chart showing race wins per constructor across all available seasons
   - Visualizes which constructors dominated each era and how competitive balance has shifted over time
 
+### User Authentication and Management (#4)
 
-## Other General Improvements
+> The Web App currently uses a static JSON file for authentication. Please add proper user authentication and management. You can find related code in `dashboard/src/authProvider.ts`.
+
+
+
+## Other Improvements
 - deployed to AWS: (PR: https://github.com/amamparo/f1-dashboard/pull/2)
   - [aws-cdk](https://aws.amazon.com/cdk/) for IaC
   - Deploy locally via `make run` or in github actions via [deploy action](https://github.com/amamparo/f1-dashboard/blob/master/.github/workflows/deploy.yml)
@@ -27,8 +32,8 @@ Visualizations Added:
   - UI is a static website in S3 behind a Cloudfront distribution
 
 ## Future Improvements
-If I were to maintain this long term, some future improvements I might considered (beyond completing the other challenges):
+If I were to maintain this long term, some future improvements I might consider (beyond completing the other challenges):
 - Leverage Tailwind to get a great-looking UI with minimal custom CSS
 - Utilize RDS instead of running sqlite3 as the production database
   - For local development, add a postgres Docker container in docker-compose.yml
-- Utilize a full-featured ORM like SqlAlchemy rather than inline SQL queries
+- Utilize an ORM like SqlAlchemy rather than inline SQL queries

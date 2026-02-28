@@ -10,7 +10,7 @@ class DB:
     @contextmanager
     def get_connection(self):
         """Context manager for database connection."""
-        conn = sqlite3.connect("data.db")
+        conn = sqlite3.connect(self.db_file)
         try:
             yield conn
             conn.commit()

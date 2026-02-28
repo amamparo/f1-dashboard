@@ -1,43 +1,77 @@
 import { AuthProvider, HttpError } from "react-admin";
-import data from "./users.json";
+import { API_BASE_URL } from "./utils/common";
 
-/**
- * This authProvider is only for test purposes. Don't use it in production.
- */
+function clearAuth() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("must_change_password");
+}
+
+function getStoredUser() {
+  const raw = localStorage.getItem("user");
+  return raw ? JSON.parse(raw) : null;
+}
+
 export const authProvider: AuthProvider = {
-  login: ({ username, password }) => {
-    const user = data.users.find(
-      (u) => u.username === username && u.password === password,
-    );
+  login: async ({ username, password }) => {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
 
-    if (user) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...userToPersist } = user;
-      localStorage.setItem("user", JSON.stringify(userToPersist));
-      return Promise.resolve();
+    if (!response.ok) {
+      throw new HttpError("Unauthorized", 401, {
+        message: "Invalid username or password",
+      });
     }
 
-    return Promise.reject(
-      new HttpError("Unauthorized", 401, {
-        message: "Invalid username or password",
-      }),
-    );
+    const { access_token, must_change_password } = await response.json();
+    localStorage.setItem("token", access_token);
+
+    // Fetch user identity
+    const meResponse = await fetch(`${API_BASE_URL}/auth/me`, {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+    if (meResponse.ok) {
+      const user = await meResponse.json();
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: user.id,
+          fullName: user.full_name,
+          avatar: user.avatar,
+          username: user.username,
+          role: user.role,
+        }),
+      );
+      if (must_change_password) {
+        localStorage.setItem("must_change_password", "true");
+      }
+    }
   },
   logout: () => {
-    localStorage.removeItem("user");
+    clearAuth();
     return Promise.resolve();
   },
-  checkError: () => Promise.resolve(),
-  checkAuth: () =>
-    localStorage.getItem("user") ? Promise.resolve() : Promise.reject(),
+  checkError: ({ status }) => {
+    if (status === 401) {
+      clearAuth();
+      return Promise.reject();
+    }
+    return Promise.resolve();
+  },
+  checkAuth: () => {
+    const token = localStorage.getItem("token");
+    if (!token) return Promise.reject();
+    return Promise.resolve();
+  },
   getPermissions: () => {
-    return Promise.resolve(undefined);
+    const user = getStoredUser();
+    return Promise.resolve(user?.role);
   },
   getIdentity: () => {
-    const persistedUser = localStorage.getItem("user");
-    const user = persistedUser ? JSON.parse(persistedUser) : null;
-
-    return Promise.resolve(user);
+    return Promise.resolve(getStoredUser());
   },
 };
 

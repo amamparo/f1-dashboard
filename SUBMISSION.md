@@ -2,6 +2,8 @@ This app is live at: https://f1-dashboard.aaronmamparo.com
 
 ---
 
+Full disclosure: This submission was built with the assistance of an LLM. I used it as a coding partner for generating boilerplate, debugging, and accelerating implementation. I'm disclosing this upfront because I believe in being transparent about my process. I view LLMs the same way I view any other tool in a developer's workflow — what matters is understanding the code you ship, making sound architectural decisions, and knowing when and how to leverage the tools available to you. Every line of code here reflects my own judgment and intent.
+
 ## Completed Challenges
 
 ### Add Meaningful Visualizations To Dashboard (\#3)

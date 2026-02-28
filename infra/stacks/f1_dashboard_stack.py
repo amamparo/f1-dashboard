@@ -14,10 +14,8 @@ from aws_cdk import (
     aws_route53 as route53,
     aws_route53_targets as targets,
     aws_ecr_assets as ecr_assets,
-    aws_events as events,
-    aws_events_targets as events_targets,
-    aws_lambda as _lambda,
     aws_s3 as s3,
+
 )
 from constructs import Construct
 
@@ -175,38 +173,9 @@ class F1DashboardStack(Stack):
             ),
         )
 
-        prediction_lambda = _lambda.DockerImageFunction(
-            self,
-            "PredictionLambda",
-            function_name="f1-race-predictor",
-            code=_lambda.DockerImageCode.from_image_asset(
-                "../predictions",
-                platform=ecr_assets.Platform.LINUX_ARM64,
-                cache_from=[DockerCacheOption(type="gha")],
-                cache_to=DockerCacheOption(type="gha", params={"mode": "max"}),
-            ),
-            architecture=_lambda.Architecture.ARM_64,
-            memory_size=1024,
-            timeout=Duration.minutes(5),
-            environment={
-                "API_URL": f"https://{api_domain}",
-            },
-        )
-
-        events.Rule(
-            self,
-            "PredictionSchedule",
-            schedule=events.Schedule.cron(minute="0", hour="6"),
-            targets=[events_targets.LambdaFunction(prediction_lambda)],
-        )
-
         CfnOutput(self, "FrontendUrl", value=f"https://{ui_domain}")
         CfnOutput(self, "ApiUrl", value=f"https://{api_domain}")
         CfnOutput(self, "SiteBucketName", value=site_bucket.bucket_name)
         CfnOutput(
             self, "DistributionId", value=distribution.distribution_id
-        )
-        CfnOutput(
-            self, "PredictionLambdaName",
-            value=prediction_lambda.function_name,
         )

@@ -49,4 +49,4 @@ def add_basic_routes(
 
 
 basic_router = APIRouter()
-add_basic_routes(basic_router, exclude_tables=['drivers', 'races', 'predictions'])
+add_basic_routes(basic_router, exclude_tables=['drivers', 'races'])

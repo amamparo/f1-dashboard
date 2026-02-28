@@ -23,9 +23,6 @@ COPY scripts/ /python-package/scripts/
 COPY Makefile /python-package/Makefile
 COPY data.db /python-package/data.db
 
-# Create predictions table in baked DB
-RUN python3 scripts/create_predictions_table.py
-
 # Install
 RUN make install
 

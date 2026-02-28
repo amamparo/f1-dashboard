@@ -5,7 +5,7 @@
 .PHONY: lint test test-all check install-all
 .PHONY: build publish install
 .PHONY: docker-build docker-rm docker-run
-.PHONY: deploy deploy-ui predictions
+.PHONY: deploy deploy-ui
 .SILENT: publish docker-run
 .DEFAULT_GOAL := help
 
@@ -128,9 +128,6 @@ init-db:
 	./scripts/initiate_db.py
 api:
 	./scripts/entrypoint.sh
-
-predictions: ## run prediction model locally (usage: make predictions or make predictions RACE_ID=1100)
-	./scripts/run-prediction.sh $(RACE_ID)
 
 api-prod:
 	fastapi run esm_fullstack_challenge/main.py --host 0.0.0.0 --port $${PORT:-9000}

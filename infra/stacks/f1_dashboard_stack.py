@@ -1,6 +1,5 @@
 from aws_cdk import (
     CfnOutput,
-    DockerCacheOption,
     Duration,
     RemovalPolicy,
     Stack,
@@ -79,8 +78,8 @@ class F1DashboardStack(Stack):
                     "..",
                     exclude=["infra/cdk.out"],
                     platform=ecr_assets.Platform.LINUX_ARM64,
-                    cache_from=[DockerCacheOption(type="gha")],
-                    cache_to=DockerCacheOption(type="gha", params={"mode": "max"}),
+                    cache_from=[{"type": "gha"}],
+                    cache_to={"type": "gha", "params": {"mode": "max"}},
                 ),
                 container_port=9000,
                 command=["api-prod"],

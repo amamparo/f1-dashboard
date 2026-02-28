@@ -1,3 +1,5 @@
+import os
+import shutil
 import sqlite3
 from contextlib import asynccontextmanager
 
@@ -14,9 +16,16 @@ from esm_fullstack_challenge.routers import (
 from esm_fullstack_challenge.routers.auth import auth_router
 from esm_fullstack_challenge.routers.users import users_router
 
+BUNDLED_DB = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data.db')
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    if not os.path.exists(DB_FILE) and os.path.exists(BUNDLED_DB):
+        db_dir = os.path.dirname(DB_FILE)
+        if db_dir:
+            os.makedirs(db_dir, exist_ok=True)
+        shutil.copy(BUNDLED_DB, DB_FILE)
     conn = sqlite3.connect(DB_FILE)
     try:
         init_users_table(conn)

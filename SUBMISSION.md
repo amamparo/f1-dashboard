@@ -39,7 +39,7 @@ Replaced the static `users.json` stub with real authentication and user manageme
 ## Other Improvements
 - deployed to AWS: (PR: https://github.com/amamparo/f1-dashboard/pull/2)
   - [aws-cdk](https://aws.amazon.com/cdk/) for IaC
-  - Deploy locally via `make run` or in github actions via [deploy action](https://github.com/amamparo/f1-dashboard/blob/master/.github/workflows/deploy.yml)
+  - Deploy locally via `make deploy` or in github actions via [deploy action](https://github.com/amamparo/f1-dashboard/blob/master/.github/workflows/deploy.yml)
   - API runs as an ECS Fargate service backed by an EFS volume (mounted sqlite db in EFS so that data persists through restarts)
   - UI is a static website in S3 behind a Cloudfront distribution
 

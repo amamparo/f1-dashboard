@@ -1,6 +1,8 @@
-# Completed Challenges
+This app is deployed and live at: https://f1-dashboard.aaronmamparo.com
 
-## Add Meaningful Visualizations To Dashboard (#3)
+## Completed Challenges
+
+### Add Meaningful Visualizations To Dashboard (#3)
 
 > The Web App does not display data in a meaningful way. Please add a dashboard that provides easy to digest insights. There should be at least 2 or more visualizations. You can find related code in `dashboard/src/pages/dashboard.tsx` and `esm_fullstack_challenge/routers/dashboard.py`.
 
@@ -17,10 +19,16 @@ Visualizations Added:
   - Visualizes which constructors dominated each era and how competitive balance has shifted over time
 
 
-# Other General Improvements
+## Other General Improvements
 - deployed to AWS: (PR: https://github.com/amamparo/f1-dashboard/pull/2)
-  - see it running at: https://f1-dashboard.aaronmamparo.com
   - [aws-cdk](https://aws.amazon.com/cdk/) for IaC
   - Deploy locally via `make run` or in github actions via [deploy action](https://github.com/amamparo/f1-dashboard/blob/master/.github/workflows/deploy.yml)
   - API runs as an ECS Fargate service backed by an EFS volume (mounted sqlite db in EFS so that data persists through restarts)
   - UI is a static website in S3 behind a Cloudfront distribution
+
+## Future Improvements
+If I were to maintain this long term, some future improvements I might considered (beyond completing the other challenges):
+- Leverage Tailwind to get a great-looking UI with minimal custom CSS
+- Utilize RDS instead of running sqlite3 as the production database
+  - For local development, add a postgres Docker container in docker-compose.yml
+- Utilize a full-featured ORM like SqlAlchemy rather than inline SQL queries

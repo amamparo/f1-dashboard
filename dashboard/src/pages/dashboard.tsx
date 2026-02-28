@@ -15,6 +15,7 @@ import {
 } from "react-admin";
 
 import { API_BASE_URL } from "../utils/common";
+import { ChampionshipProgression } from "./championshipProgression";
 
 const httpClient = async (url, options = {}) => {
   const { status, headers, body, json } = await fetchUtils.fetchJson(
@@ -89,6 +90,9 @@ export const Dashboard = () => (
         </Grid>
         <Grid size={6}>
           <BasicChart />
+        </Grid>
+        <Grid size={12}>
+          <ChampionshipProgression />
         </Grid>
       </Grid>
     </Box>

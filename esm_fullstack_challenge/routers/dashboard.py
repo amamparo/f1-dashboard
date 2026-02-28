@@ -1,5 +1,7 @@
+from typing import Optional
+
 import pandas as pd
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from esm_fullstack_challenge.db import DB, query_builder
 from esm_fullstack_challenge.dependencies import get_db, CommonQueryParams
@@ -55,3 +57,34 @@ def get_top_drivers_by_wins(
         drivers = list(df.to_dict(orient='records'))
 
     return drivers
+
+
+@dashboard_router.get("/championship_progression")
+def get_championship_progression(
+    season: Optional[int] = Query(None),
+    db: DB = Depends(get_db),
+) -> list:
+    """Get championship points progression by round for a season."""
+    with db.get_connection() as conn:
+        if season is None:
+            row = conn.execute(
+                "SELECT MAX(year) FROM races"
+            ).fetchone()
+            season = row[0]
+
+        df = pd.read_sql_query(
+            "SELECT r.round, r.name AS race_name,"
+            "       d.forename || ' ' || d.surname AS driver_name,"
+            "       ds.points"
+            " FROM driver_standings ds"
+            " JOIN races r ON ds.race_id = r.id"
+            " JOIN drivers d ON ds.driver_id = d.id"
+            " WHERE r.year = ?"
+            " ORDER BY r.round, ds.points DESC",
+            conn,
+            params=[season],
+        )
+    records = df.to_dict(orient='records')
+    for r in records:
+        r['season'] = season
+    return list(records)

@@ -5,17 +5,8 @@ import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import Plot from "react-plotly.js";
-import { fetchUtils } from "react-admin";
 
-import { API_BASE_URL } from "../utils/common";
-
-const httpClient = async (url: string, options = {}) => {
-  const { status, headers, body, json } = await fetchUtils.fetchJson(
-    url,
-    options,
-  );
-  return { status, headers, body, json };
-};
+import { get } from "../utils/api";
 
 export const ChampionshipProgression = () => {
   const theme = useTheme();
@@ -23,10 +14,11 @@ export const ChampionshipProgression = () => {
   const [data, setData] = useState<Record<string, unknown>[] | null>(null);
 
   useEffect(() => {
-    const params = season ? `?season=${season}` : "";
-    const url = `${API_BASE_URL}/dashboard/championship_progression${params}`;
     setData(null);
-    httpClient(url).then(({ json }) => setData(json));
+    get(
+      "/dashboard/championship_progression",
+      season ? { season } : undefined,
+    ).then(setData);
   }, [season]);
 
   if (!data || data.length === 0) return null;

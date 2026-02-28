@@ -88,3 +88,23 @@ def get_championship_progression(
     for r in records:
         r['season'] = season
     return list(records)
+
+
+@dashboard_router.get("/constructor_wins_by_era")
+def get_constructor_wins_by_era(
+    db: DB = Depends(get_db),
+) -> list:
+    """Get constructor race wins per season across all eras."""
+    with db.get_connection() as conn:
+        df = pd.read_sql_query(
+            "SELECT r.year AS season, c.name AS constructor_name,"
+            "       MAX(cs.wins) AS wins"
+            " FROM constructor_standings cs"
+            " JOIN races r ON cs.race_id = r.id"
+            " JOIN constructors c ON cs.constructor_id = c.id"
+            " GROUP BY r.year, c.name"
+            " HAVING MAX(cs.wins) > 0"
+            " ORDER BY r.year, wins DESC",
+            conn,
+        )
+    return list(df.to_dict(orient='records'))

@@ -1,47 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Plot from "react-plotly.js";
-import { stringify } from "query-string";
+import { Title, useList, ListContextProvider, DataTable } from "react-admin";
 
-import {
-  Title,
-  useList,
-  ListContextProvider,
-  DataTable,
-  fetchUtils,
-} from "react-admin";
-
-import { API_BASE_URL } from "../utils/common";
+import { get } from "../utils/api";
 import { ChampionshipProgression } from "./championshipProgression";
-
-const httpClient = async (url, options = {}) => {
-  const { status, headers, body, json } = await fetchUtils.fetchJson(
-    url,
-    options,
-  );
-  return { status, headers, body, json };
-};
+import { ConstructorDominance } from "./constructorDominance";
 
 const TopDriversByWins = () => {
-  const query = {
-    range: "[0, 9]",
-  };
-  const url = `${API_BASE_URL}/dashboard/top_drivers_by_wins?${stringify(query)}`;
-  const options = {
-    method: "GET",
-    headers: new Headers({
-      Accept: "application/json",
-    }),
-  };
   const [data, setData] = useState(null);
   useEffect(() => {
-    httpClient(url, options).then(({ json }) => {
-      setData(json);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    get("/dashboard/top_drivers_by_wins", { range: "[0, 9]" }).then(setData);
   }, []);
   const listContext = useList({ data });
   if (data) {
@@ -91,8 +64,17 @@ export const Dashboard = () => (
         <Grid size={6}>
           <BasicChart />
         </Grid>
+        <Grid size={12} sx={{ my: 2 }}>
+          <Divider />
+        </Grid>
         <Grid size={12}>
           <ChampionshipProgression />
+        </Grid>
+        <Grid size={12} sx={{ my: 2 }}>
+          <Divider />
+        </Grid>
+        <Grid size={12}>
+          <ConstructorDominance />
         </Grid>
       </Grid>
     </Box>

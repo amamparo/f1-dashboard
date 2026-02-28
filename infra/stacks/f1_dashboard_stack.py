@@ -95,7 +95,7 @@ class F1DashboardStack(Stack):
                 command=["api-prod"],
                 environment={
                     "PORT": "9000",
-                    "DB_FILE": "/data/data.db",
+                    "DB_FILE": "/python-package/data/data.db",
                     "CORS_ORIGINS": f"https://{ui_domain}",
                 },
                 secrets={

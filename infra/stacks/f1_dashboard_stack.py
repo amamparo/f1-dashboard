@@ -14,7 +14,7 @@ from aws_cdk import (
     aws_route53_targets as targets,
     aws_ecr_assets as ecr_assets,
     aws_s3 as s3,
-
+    aws_secretsmanager as secretsmanager,
 )
 from constructs import Construct
 
@@ -57,6 +57,16 @@ class F1DashboardStack(Stack):
             posix_user=efs.PosixUser(uid="1000", gid="1000"),
         )
 
+        secret_key = secretsmanager.Secret(
+            self,
+            "JwtSecretKey",
+            secret_name="f1-dashboard/secret-key",
+            generate_secret_string=secretsmanager.SecretStringGenerator(
+                exclude_punctuation=True,
+                password_length=64,
+            ),
+        )
+
         cluster = ecs.Cluster(
             self, "Cluster", cluster_name="f1-dashboard", vpc=vpc
         )
@@ -85,8 +95,11 @@ class F1DashboardStack(Stack):
                 command=["api-prod"],
                 environment={
                     "PORT": "9000",
-                    "DB_FILE": "/data/data.db",
+                    "DB_FILE": "/python-package/data/data.db",
                     "CORS_ORIGINS": f"https://{ui_domain}",
+                },
+                secrets={
+                    "SECRET_KEY": ecs.Secret.from_secrets_manager(secret_key),
                 },
             ),
             certificate=cert,
